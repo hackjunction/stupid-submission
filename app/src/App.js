@@ -3,12 +3,17 @@ import SubmissionForm from './SubmissionForm';
 import './index.css';
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.update = this.update.bind(this);
+  }
   update(){
     fetch('/api/', {
       credentials: 'same-origin'
     })
     .then(data => data.json())
     .then(data => {
+      console.log(data)
       this.setState(data);
     })
     .catch((err) => {
