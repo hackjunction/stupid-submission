@@ -6,10 +6,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    members: {
-        type: [String],
-        required: true
-    },
     submission: {
         projectName: {
             type: String,
@@ -33,6 +29,9 @@ const userSchema = new mongoose.Schema({
     },
     judgingLink: {
         type: String
+    },
+    gavelId:{
+        type: Number
     }
 });
 
