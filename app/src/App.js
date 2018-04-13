@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './index.css';
 
 class App extends Component {
   constructor(props) {
@@ -45,7 +46,6 @@ class App extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    console.log(this.state);
   }
 
   generateTableNumberOptionFields() {
@@ -143,8 +143,8 @@ class RegisterForm extends React.Component {
   }
   render(){
     return (
-      <div>
-        <form id="register_form" onSubmit={this.submit}>
+      <div className="form-container">
+        <form onSubmit={this.submit}>
           <div>
             <label for="register_team_name">Team name:</label>
             <input id="register_team_name" name="team_name" type="text" onChange={this.changeTeamName}/>
@@ -189,7 +189,7 @@ class LoginForm extends React.Component {
   }
   render(){
     return (
-      <div>
+      <div className="form-container">
         <form id="login_form" onSubmit={this.submit}>
           <div>
             <label for="login_team_name">Team name:</label>
