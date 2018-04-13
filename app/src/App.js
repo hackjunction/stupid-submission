@@ -125,6 +125,10 @@ class RegisterForm extends React.Component {
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+    console.log(event.target)
+    if(event.target.name === "password1"){
+      this.setState({ "password2": event.target.value });
+    }
   }
 
   submit(e){
@@ -137,18 +141,18 @@ class RegisterForm extends React.Component {
   render(){
     return (
       <div className="form-container">
-        <form onSubmit={this.submit}>
+        <form id="register_form" onSubmit={this.submit}>
           <div>
             <label for="register_team_name">Team name:</label>
-            <input id="register_team_name" name="team_name" type="text" onChange={this.handleChange}/>
+            <input id="register_team_name" name="team_name" type="text" onChange={this.handleChange} value={this.state ? this.state.team_name : ""}/>
           </div>
           <div>
-            <label for="register_team_name">Password:</label>
-            <input id="register_password1" name="password1" type="text" onChange={this.handleChange}/>
+            <label for="register_password1">Password:</label>
+            <input id="register_password1" name="password1" type="text" onChange={this.handleChange} value={this.state ? this.state.password1 : ""}/>
           </div>
           <div>
-            <label for="register_team_name">Repeat password:</label>
-            <input id="register_password2" name="password2" type="text" onChange={this.handleChange}/>
+            <label for="register_password2">Repeat password:</label>
+            <input id="register_password2" name="password2" type="text" onChange={this.handleChange} value={this.state ? this.state.password2 : ""}/>
           </div>
           <div>
             <input id="register_submit" name="register_submit" type="submit" value="Register"/>
