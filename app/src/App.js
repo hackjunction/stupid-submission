@@ -4,7 +4,9 @@ import './index.css';
 
 class App extends Component {
   update(){
-    fetch('/api/')
+    fetch('/api/', {
+      credentials: 'same-origin'
+    })
     .then(data => data.json())
     .then(data => {
       this.setState(data);
@@ -90,7 +92,7 @@ class SubmissionFormContainer extends Component {
       />
     );
   }
-} 
+}
 
 class RegisterForm extends React.Component {
   constructor(props) {
@@ -102,8 +104,11 @@ class RegisterForm extends React.Component {
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
     console.log(event.target)
-    if(event.target.name === "password1"){
+    if(event.target.name === "password"){
       this.setState({ "password2": event.target.value });
+    }
+    if(event.target.name === "password2"){
+      this.setState({ "password": event.target.value });
     }
   }
 
@@ -111,7 +116,16 @@ class RegisterForm extends React.Component {
     e.preventDefault();
     var form = document.getElementById('register_form');
     var formdata = new FormData(form);
-    fetch('/register', {method:"POST", body: formdata})
+    var fields = {};
+    formdata.forEach(function(value, key){
+        fields[key] = value;
+    });
+    console.log(fields)
+    fetch('/register', {
+      method:"POST", headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }, body: JSON.stringify(fields)})
     .then(this.props.update);
   }
   render(){
@@ -120,11 +134,11 @@ class RegisterForm extends React.Component {
         <form id="register_form" onSubmit={this.submit}>
           <div>
             <label for="register_team_name">Team name:</label>
-            <input id="register_team_name" name="team_name" type="text" onChange={this.handleChange} value={this.state ? this.state.team_name : ""}/>
+            <input id="register_team_name" name="teamName" type="text" onChange={this.handleChange} value={this.state ? this.state.team_name : ""}/>
           </div>
           <div>
             <label for="register_password1">Password:</label>
-            <input id="register_password1" name="password1" type="text" onChange={this.handleChange} value={this.state ? this.state.password1 : ""}/>
+            <input id="register_password1" name="password" type="text" onChange={this.handleChange} value={this.state ? this.state.password1 : ""}/>
           </div>
           <div>
             <label for="register_password2">Repeat password:</label>
@@ -153,7 +167,16 @@ class LoginForm extends React.Component {
     e.preventDefault();
     var form = document.getElementById('login_form');
     var formdata = new FormData(form);
-    fetch('/login', {method:"POST", body: formdata})
+    var fields = {};
+    formdata.forEach(function(value, key){
+        fields[key] = value;
+    });
+    console.log(fields)
+    fetch('/login', {
+      method:"POST", headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }, body: JSON.stringify(fields)})
     .then(this.props.update);
   }
   render() {
@@ -162,7 +185,7 @@ class LoginForm extends React.Component {
         <form id="login_form" onSubmit={this.submit}>
           <div>
             <label htmlFor="login_team_name">Team name:</label>
-            <input id="login_team_name" name="team_name" type="text" onChange={this.handleChange}></input>
+            <input id="login_team_name" name="teamName" type="text" onChange={this.handleChange}></input>
           </div>
           <div>
             <label htmlFor="login_password">Password:</label>

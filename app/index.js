@@ -17,10 +17,12 @@ const port = process.env.PORT || 3000;
 const databaseURI = process.env.MONGODB_URI || 'mongodb://admin:stupidness@ds129906.mlab.com:29906/stupidhack-submission';
 
 mongoose.connect(databaseURI);
+auth(app);
 
 app.use('/static', express.static(`${__dirname}/build/static`));
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({extended: true}));
+
 
 app.get('/', (req, res) => {
     res.sendFile('index.html', {root});
@@ -83,18 +85,19 @@ app.post('/submit', (req, res) => {
 });
 
 app.get('/api', (req, res) => {
+  console.log(req.user)
     if(req.user) {
         if(currentDate.getTime() >= deadlineDate.getTime()){
-            return { 
+            return {
                 pastDeadline: true,
                 submission: req.user.submission,
                 user: {
                     teamName: req.user.teamName
                 },
                 judgingLink: req.user.judgingLink
-            } 
+            }
         } else {
-            return { 
+            return {
                 pastDeadline: false,
                 submission: req.user.submission,
                 user: {
@@ -107,6 +110,5 @@ app.get('/api', (req, res) => {
     }
 })
 
-auth(app);
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
