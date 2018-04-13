@@ -2,12 +2,9 @@ const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 
 const userSchema = new mongoose.Schema({
-    email: {
+    teamName: {
         type: String,
         required: true
-    },
-    teamName: {
-        type: String
     },
     members: {
         type: [String]
@@ -29,7 +26,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.plugin(passportLocalMongoose, {
-    usernameField: 'email'
+    usernameField: 'teamName'
 });
 
 const User = mongoose.model('User', userSchema);
