@@ -1,6 +1,6 @@
-import cookieSession from 'cookie-session';
-import passport from 'passport';
-import User from './models/User';
+const cookieSession = require('cookie-session');
+const passport = require('passport');
+const User = require('./models/User');
 
 export default app => {
   app.use(
