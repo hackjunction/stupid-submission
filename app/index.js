@@ -2,31 +2,19 @@ const express = require('express');
 const passport = require('passport');
 const User = require('./server/models/User');
 const auth = require('./server/auth');
+const path = require('path');
 
 const app = express();
 const deadlineDate = new Date('2018-04-14T12:00:00');
-const staticPath = path.join(__dirname, '../../');
+const root = path.join(__dirname, '/build');
 
-const api = express.Router();
+app.use('/static', express.static(`${__dirname}/build/static`));
 
-api.get('/', (req, res) => {
-    if(req.user) {
-        const currentDate = new Date()
-        if(currentDate.getTime() >= deadlineDate.getTime()){
-            res.send("You late boi")
-        }
-        res.send("Still time boi")
-    }
-    else {
-        res.redirect('/login');
-    }
+app.get('/', (req, res) => {
+    res.sendFile('index.html', {root});
 });
 
-api.get('/login', (req, res) => {
-    res.send("LOGIN");
-});
-
-api.post('/register', (req, res) => {
+app.post('/register', (req, res) => {
     User.findOne({ teamName: req.body.teamName }, (err, user) => {
       /*
       Skip user creation if an error occurred or a
@@ -41,7 +29,7 @@ api.post('/register', (req, res) => {
             res.sendStatus(500);
           } else {
             passport.authenticate('local')(req, res, () => {
-              res.redirect('/#/dashboard');
+              res.redirect('/');
             });
           }
         });
@@ -49,23 +37,30 @@ api.post('/register', (req, res) => {
     });
   });
 
-api.post('/login',
+app.post('/login',
     passport.authenticate('local', {
         successRedirect: '/',
         failureRedirect: '/login'
     })
 );
 
-api.get('/logout', (req, res) => {
+app.get('/logout', (req, res) => {
     req.logout();
-    res.redirect('/login');
+    res.redirect('/');
 })
 
-api.post('/submit', (req, res) => {
-        // TODO
+app.post('/submit', (req, res) => {
+    if(req.user) {
+        User.findOneAndUpdate({ teamName: req.user.teamName }, { $set: { submission: req.body } }, (err, user) => {
+            if(err) {
+                res.sendStatus(500);
+            } else {
+                res.sendStatus(200);
+            }
+        });
+    }
 });
 
 auth(app);
-app.use('/api', api);
 
-api.listen(3000, () => console.log('Example app listening on port 3000!'))
+app.listen(3000, () => console.log('Example app listening on port 3000!'))
