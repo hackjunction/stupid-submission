@@ -26,4 +26,12 @@ const teamSchema = new mongoose.Schema({
     judgingLink: {
         type: String
     }
-})
+});
+
+teamSchema.plugin(passportLocalMongoose, {
+    usernameField: 'email'
+});
+
+const Team = mongoose.model('Team', teamSchema);
+
+export default Team;
