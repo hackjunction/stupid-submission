@@ -1,9 +1,13 @@
 const express = require('express');
 const passport = require('passport');
-const User = require('./models/User');
+const User = require('./server/models/User');
+const auth = require('./server/auth');
 
-const api = express()
-const deadlineDate = new Date('2018-04-14T12:00:00')
+const app = express();
+const deadlineDate = new Date('2018-04-14T12:00:00');
+const staticPath = path.join(__dirname, '../../');
+
+const api = express.Router();
 
 api.get('/', (req, res) => {
     if(req.user) {
@@ -56,5 +60,12 @@ api.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/login');
 })
+
+api.post('/submit', (req, res) => {
+        // TODO
+});
+
+auth(app);
+app.use('/api', api);
 
 api.listen(3000, () => console.log('Example app listening on port 3000!'))
