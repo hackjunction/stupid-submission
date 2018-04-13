@@ -88,22 +88,22 @@ app.get('/api', (req, res) => {
   console.log(req.user)
     if(req.user) {
         if(currentDate.getTime() >= deadlineDate.getTime()){
-            return {
+            res.send({
                 pastDeadline: true,
                 submission: req.user.submission,
                 user: {
                     teamName: req.user.teamName
                 },
                 judgingLink: req.user.judgingLink
-            }
+            })
         } else {
-            return {
+            res.send({
                 pastDeadline: false,
                 submission: req.user.submission,
                 user: {
                     teamName: req.user.teamName
                 }
-            }
+            })
         }
     } else {
         return res.sendStatus(403);
