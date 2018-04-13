@@ -145,13 +145,21 @@ class RegisterForm extends React.Component {
     return (
       <div>
         <form id="register_form" onSubmit={this.submit}>
-          <label for="register_team_name">Team name:</label>
-          <input id="register_team_name" name="team_name" type="text" onChange={this.changeTeamName}/>
-          <label for="register_team_name">Password:</label>
-          <input id="register_password1" name="password1" type="text" onChange={this.changePw}/>
-          <label for="register_team_name">Repeat password:</label>
-          <input id="register_password2" name="password2" type="text" onChange={this.changePw2}/>
-          <input id="register_submit" name="register_submit" type="submit" value="Register"/>
+          <div>
+            <label for="register_team_name">Team name:</label>
+            <input id="register_team_name" name="team_name" type="text" onChange={this.changeTeamName}/>
+          </div>
+          <div>
+            <label for="register_team_name">Password:</label>
+            <input id="register_password1" name="password1" type="text" onChange={this.changePw}/>
+          </div>
+          <div>
+            <label for="register_team_name">Repeat password:</label>
+            <input id="register_password2" name="password2" type="text" onChange={this.changePw2}/>
+          </div>
+          <div>
+            <input id="register_submit" name="register_submit" type="submit" value="Register"/>
+          </div>
         </form>
         <button onClick={this.props.login}> Login instead </button>
       </div>
@@ -183,11 +191,17 @@ class LoginForm extends React.Component {
     return (
       <div>
         <form id="login_form" onSubmit={this.submit}>
-          <label for="login_team_name">Team name:</label>
-          <input id="login_team_name" name="team_name" type="text" onChange={this.changeTeamName}></input>
-          <label for="login_password">Password:</label>
-          <input id="login_password" name="password" type="text" onChange={this.changePw}></input>
-          <input id="login_submit" name="submit" type="submit" value="Login"/>
+          <div>
+            <label for="login_team_name">Team name:</label>
+            <input id="login_team_name" name="team_name" type="text" onChange={this.changeTeamName}></input>
+          </div>
+          <div>
+            <label for="login_password">Password:</label>
+            <input id="login_password" name="password" type="text" onChange={this.changePw}></input>
+          </div>
+          <div>
+            <input id="login_submit" name="submit" type="submit" value="Login"/>
+          </div>
         </form>
         <button onClick={this.props.register}> Register instead </button>
       </div>
