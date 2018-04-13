@@ -7,17 +7,21 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     members: {
-        type: [String]
+        type: [String],
+        required: true
     },
     submission: {
         projectName: {
-            type: String
+            type: String,
+            required: true
         },
         tableNumber: {
-            type: String
+            type: String,
+            required: true
         },
         description: {
-            type: String
+            type: String,
+            required: true
         }
     },
     judgingLink: {
