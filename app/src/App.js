@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './index.css';
 
 class App extends Component {
   constructor(props) {
@@ -35,7 +36,6 @@ class App extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    console.log(this.state);
   }
 
   generateTableNumberOptionFields() {
@@ -52,7 +52,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="form-container">
         <form onSubmit={this.handleSubmit}>
           <div>
             <label htmlFor="projectName">Project name *</label>
