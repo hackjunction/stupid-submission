@@ -35,11 +35,15 @@ button {
   width: 100%;
 }
 
-button:hover {
+button:hover:enabled {
   background-color: #474849;
   cursor: pointer;
 }
 
-button:active {
+button:active:enabled {
   background-color: #96999b;
+}
+
+button:disabled {
+  background-color: #c1c5cc;
 }
