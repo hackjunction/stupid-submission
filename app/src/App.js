@@ -122,7 +122,9 @@ class RegisterForm extends React.Component {
     });
     console.log(fields)
     fetch('/register', {
-      method:"POST", headers: {
+      method:"POST",
+      credentials: 'include',
+      headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       }, body: JSON.stringify(fields)})
@@ -173,7 +175,9 @@ class LoginForm extends React.Component {
     });
     console.log(fields)
     fetch('/login', {
-      method:"POST", headers: {
+      method:"POST",
+      credentials: 'include',
+      headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       }, body: JSON.stringify(fields)})
