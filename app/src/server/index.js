@@ -14,12 +14,47 @@ api.get('/', (req, res) => {
         res.send("Still time boi")
     }
     else {
-        res.send("yah");
+        res.redirect('/login');
     }
 });
 
 api.get('/login', (req, res) => {
-
+    res.send("LOGIN");
 });
+
+api.post('/register', (req, res) => {
+    User.findOne({ teamName: req.body.teamName }, (err, user) => {
+      /*
+      Skip user creation if an error occurred or a
+      user for the submitted teamName already exists.
+      */
+      if (err || user) {
+        res.sendStatus(500);
+      } else {
+        // TODO: Inspect password strength, compare the submitted passwords etc.
+        User.register(new User({ teamName: req.body.teamName }), req.body.password, (err, user) => {
+          if (err) {
+            res.sendStatus(500);
+          } else {
+            passport.authenticate('local')(req, res, () => {
+              res.redirect('/#/dashboard');
+            });
+          }
+        });
+      }
+    });
+  });
+
+api.post('/login',
+    passport.authenticate('local', {
+        successRedirect: '/',
+        failureRedirect: '/login'
+    })
+);
+
+api.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/login');
+})
 
 api.listen(3000, () => console.log('Example app listening on port 3000!'))
