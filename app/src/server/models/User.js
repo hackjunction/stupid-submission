@@ -15,13 +15,20 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: true
         },
-        tableNumber: {
-            type: String,
+        teamMembers: {
+            type: [String],
             required: true
         },
         description: {
             type: String,
             required: true
+        },
+        table: {
+            type: String,
+            required: true
+        },
+        link: {
+            type: String,
         }
     },
     judgingLink: {
