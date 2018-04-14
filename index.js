@@ -17,7 +17,7 @@ const currentDate = new Date();
 const root = path.join(__dirname, '/build');
 
 const port = process.env.PORT || 3000;
-const databaseURI = process.env.MONGODB_URI || 'mongodb://admin:stupidness@ds129906.mlab.com:29906/stupidhack-submission';
+const databaseURI = process.env.MONGO_URL || 'mongodb://admin:stupidness@ds129906.mlab.com:29906/stupidhack-submission';
 
 mongoose.connect(databaseURI);
 auth(app);
