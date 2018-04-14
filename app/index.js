@@ -69,18 +69,18 @@ app.get('/logout', (req, res) => {
 
 app.post('/submit', (req, res) => {
     if(req.user) {
-        User.findOneAndUpdate({ teamName: req.user.teamName }, { $set: { submission: req.body } }, (err, user) => {
-            if(err) {
-                res.sendStatus(500);
-            } else {
-                if(currentDate.getTime() < deadlineDate.getTime()){
+        if(currentDate.getTime() < deadlineDate.getTime()){
+            User.findOneAndUpdate({ teamName: req.user.teamName }, { $set: { submission: req.body } }, (err, user) => {
+                if(err) {
+                    res.sendStatus(500);
+                } else {
                     res.sendStatus(200);
                 }
-                else {
-                    res.sendStatus(500);
-                }
-            }
-        });
+            })
+        }
+        else {
+            res.sendStatus(500);
+        }
     }
 });
 
