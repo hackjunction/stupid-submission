@@ -26,8 +26,10 @@ function generateTableNumberOptionFields() {
 }
 
 export default function SubmissionForm(props) {
+  console.log(props)
 	return (
 		<div className="form-container">
+      <p>Be careful, your location and team name set in the system on the first time you submit will be the ones we will use for finding you for judging. All of the other information you can edit by submitting the form again.</p>
     <form onSubmit={props.handleSubmit}>
       <div>
         <label htmlFor="projectName">Project name *</label>

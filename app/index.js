@@ -154,7 +154,7 @@ app.get('/api', (req, res) => {
                 user: {
                     teamName: req.user.teamName
                 },
-                judgingLink: req.user.judgingLink
+                judgingLink: process.env.GAVEL_URL + req.user.judgingLink
             })
         } else {
             res.send({

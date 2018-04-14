@@ -32,11 +32,27 @@ class App extends Component {
       this.setState({view: "register"});
     }
     register = register.bind(this);
+    console.log(this.state)
     return (
       <div className="App">
+        { this.state && this.state.pastDeadline === true ? <div>
+          {this.state.judgingLink ? <div>
+            <p>
+              Go judge the other project from this link:
+            </p>
+            <a href={this.state.judgingLink}>
+              <p>Go to the Judging site!</p>
+            </a>
+          </div>:<div>
+            <p>
+              Unfortunately you missed the submission deadline :(
+              Go check out all the cool projects anyway!
+            </p>
+          </div>}
+        </div> :
         <div className="App">
           {this.state && this.state.user ? <div>
-            <SubmissionFormContainer />
+            <SubmissionFormContainer projectName={this.state.submission.projectName} table={this.state.submission.table} description={this.state.submission.description} teamMembers={this.state.submission.teamMembers && this.state.submission.teamMembers.join('\n')} link={this.state.submission.link}/>
           </div> : <div>
             {this.state && this.state.view !== "register" ?
               <LoginForm register={register} update={this.update}/> :
@@ -45,7 +61,7 @@ class App extends Component {
           </div>}
           <header className="App-header">
           </header>
-        </div>
+        </div>}
       </div>
     );
   }
@@ -56,11 +72,11 @@ class SubmissionFormContainer extends Component {
     super(props);
 
     this.state = {
-      projectName: '',
-      teamMembers: '',
-      description: '',
-      table: '',
-      link: '',
+      projectName: props.projectName || '',
+      teamMembers: props.teamMembers || '',
+      description: props.description || '',
+      table: props.table || '',
+      link: props.link || '',
       isValid: false,
       submitButtonText: 'Submit'
     }
