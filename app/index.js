@@ -6,6 +6,8 @@ const path = require('path');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const fetch = require('node-fetch');
+const FormData = require('form-data');
+const FormDataUrlEncoded = require('form-data-urlencoded');
 
 dotenv.config();
 
@@ -76,18 +78,22 @@ app.post('/submit', (req, res) => {
                     res.sendStatus(500);
                 } else {
                   console.log(writeResult);
-                  if(writeResult.nUpserted === 1){
+                  if(!req.user.gavelId){
                     console.log("upserted")
-                    fetch(process.env.GAVEL_URL + '/api/submit-project', {
-                      body: {
-                        project_name:req.body.projectName,
-                        project_location:req.body.table,
-                        project_description:req.body.description,
-                        team_email:req.body.projectName+"@stupidhack.hackjunction.com"
-                      },
+                    var form = new FormData();
+                    form.append('project_name', req.body.projectName)
+                    form.append('project_location', req.body.table)
+                    form.append('project_description', req.body.description)
+                    form.append('team_email', req.body.projectName+"@stupidhack.hackjunction.com")
+                    console.log(form)
+                    fetch(process.env.GAVEL_URL + 'api/submit-project', {
+                      method:'POST',
+                      body: form,
                       headers: {
-                        'Authorization': 'Basic ' + base64.encode(process.env.GAVEL_USER + ":" + process.env.GAVEL_PASSWORD)
+                        'Authorization': 'Basic ' + Buffer.from(process.env.GAVEL_USER + ":" + process.env.GAVEL_PASSWORD).toString('base64')
                       }
+                    }).then((result) => {
+                      return result.json()
                     }).then((result) => {
                       User.update({ teamName: req.user.teamName },
                         { $set: {
@@ -95,29 +101,50 @@ app.post('/submit', (req, res) => {
                           judgingSecret: result.data.annotator_secret,
                           gavelId: result.data.project_id
                         }}, (err, writeResult) => {
-                        if(!err){
-                          res.sendStatus(200);
-                        } else {
-                          res.sendStatus(500);
-                        }
-                      })
-                    }).catch(() => {
+                          console.log(102, writeResult)
+                          if(!err){
+                            res.sendStatus(200);
+                          } else {
+                            console.log(err);
+                            res.sendStatus(500);
+                          }
+                        })
+                    }).catch((err) => {
+                      console.log(err);
                       res.sendStatus(500);
                     })
                   } else {
                     console.log("modified")
-                    fetch(process.env.GAVEL_URL + '/admin/item_patch', {
-                      body: {
-                        item_id: req.user.gavelId,
-                        location: req.body.table,
-                        name: req.body.projectName,
-                        description:req.body.description
-                      },
+                    var form = new FormDataUrlEncoded({
+                      'item_id': req.user.gavelId,
+                      'location': req.body.table,
+                      'description': req.body.description,
+                      'name': req.body.projectName,
+                      'action': 'Update'
+                    })
+                    console.log('Basic ' + Buffer.from(process.env.GAVEL_USER + ":" + process.env.GAVEL_PASSWORD).toString('base64'))
+                    fetch(process.env.GAVEL_URL + 'admin', {
+                      method:'GET',
+                      credentials: 'include',
                       headers: {
-                        'Authorization': 'Basic ' + base64.encode(process.env.GAVEL_USER + ":" + process.env.GAVEL_PASSWORD)
+                        'Authorization': 'Basic ' + Buffer.from(process.env.GAVEL_USER + ":" + process.env.GAVEL_PASSWORD).toString('base64')
                       }
-                    }).then((result) => {
-                      res.sendStatus(200);
+                    }).then( (response) => {
+                      console.log(response.headers._headers['set-cookie'][0].split(';')[0])
+                      fetch(process.env.GAVEL_URL + 'admin/item_patch', {
+                        method:'POST',
+                        body: form,
+                        credentials: 'include',
+                        headers: {
+                          'Authorization': 'Basic ' + Buffer.from(process.env.GAVEL_USER + ":" + process.env.GAVEL_PASSWORD).toString('base64'),
+                          cookie: response.headers._headers['set-cookie'][0].split(';')[0]
+                        }
+                      }).then((result) => {
+                        console.log(result)
+                        res.sendStatus(200);
+                      }).catch(() => {
+                        res.sendStatus(500);
+                      })
                     }).catch(() => {
                       res.sendStatus(500);
                     })

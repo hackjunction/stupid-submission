@@ -25,7 +25,8 @@ const submissionSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
     teamName: {
         type: String,
-        required: true
+        required: true,
+        index: true
     },
     submission: {
         type: submissionSchema,
