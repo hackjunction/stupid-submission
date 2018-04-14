@@ -36,12 +36,12 @@ class App extends Component {
     return (
       <div className="App">
         { this.state && this.state.pastDeadline === true ? <div>
-          {this.state.judgingLink ? <div>
+          {this.state.judgingLink ? <div className="judging-div">
             <p>
               Go judge the other project from this link:
             </p>
             <a href={this.state.judgingLink}>
-              <p>Go to the Judging site!</p>
+              <p className="judging-link">Go to the Judging site!</p>
             </a>
           </div>:<div>
             <p>

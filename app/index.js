@@ -12,7 +12,7 @@ const FormDataUrlEncoded = require('form-data-urlencoded');
 dotenv.config();
 
 const app = express();
-const deadlineDate = new Date('2018-04-14T13:00:00');
+const deadlineDate = new Date(process.env.DEADLINE || '2018-04-14T13:00:00');
 const currentDate = new Date();
 const root = path.join(__dirname, '/build');
 
@@ -71,7 +71,7 @@ app.get('/logout', (req, res) => {
 
 app.post('/submit', (req, res) => {
     if(req.user) {
-        if(currentDate.getTime() < deadlineDate.getTime()){
+        if((new Date()).getTime() < deadlineDate.getTime()){
             User.update({ teamName: req.user.teamName }, { $set: { submission: req.body } }, (err, writeResult) => {
                 if(err) {
                     res.sendStatus(500);
@@ -147,7 +147,7 @@ app.post('/submit', (req, res) => {
 app.get('/api', (req, res) => {
   console.log(req.user)
     if(req.user) {
-        if(currentDate.getTime() >= deadlineDate.getTime()){
+        if((new Date()).getTime() >= deadlineDate.getTime()){
             res.send({
                 pastDeadline: true,
                 submission: req.user.submission,

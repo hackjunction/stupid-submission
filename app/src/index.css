@@ -6,6 +6,19 @@ body {
   width: 400px;
   margin: 10px auto;
 }
+.judging-div {
+  width: 400px;
+  margin: 10px auto;
+}
+.judging-link {
+  color: pink;
+  background: teal;
+  font-weight: 700;
+  text-align: center;
+  margin: auto;
+  min-height: 50px;
+  font-size: 30px;
+}
 
 label, input, select, textarea {
   box-sizing: border-box;
