@@ -50,7 +50,6 @@ app.post('/register', (req, res) => {
           } else {
             passport.authenticate('local')(req, res, () => {
               res.sendStatus(200);
-              res.redirect('/');
             });
           }
         });
@@ -115,36 +114,21 @@ app.post('/submit', (req, res) => {
                     })
                   } else {
                     console.log("modified")
-                    var form = new FormDataUrlEncoded({
-                      'item_id': req.user.gavelId,
-                      'location': req.body.table,
-                      'description': req.body.description,
-                      'name': req.body.projectName,
-                      'action': 'Update'
-                    })
-                    console.log('Basic ' + Buffer.from(process.env.GAVEL_USER + ":" + process.env.GAVEL_PASSWORD).toString('base64'))
-                    fetch(process.env.GAVEL_URL + 'admin', {
-                      method:'GET',
-                      credentials: 'include',
+                    var form = new FormData();
+                    form.append('item_id', req.user.gavelId)
+                    form.append('location', req.body.table)
+                    form.append('description', req.body.description)
+                    form.append('name', req.body.projectName)
+                    form.append('action', 'Update')
+                    fetch(process.env.GAVEL_URL + 'api/edit-project', {
+                      method:'POST',
+                      body: form,
                       headers: {
                         'Authorization': 'Basic ' + Buffer.from(process.env.GAVEL_USER + ":" + process.env.GAVEL_PASSWORD).toString('base64')
                       }
-                    }).then( (response) => {
-                      console.log(response.headers._headers['set-cookie'][0].split(';')[0])
-                      fetch(process.env.GAVEL_URL + 'admin/item_patch', {
-                        method:'POST',
-                        body: form,
-                        credentials: 'include',
-                        headers: {
-                          'Authorization': 'Basic ' + Buffer.from(process.env.GAVEL_USER + ":" + process.env.GAVEL_PASSWORD).toString('base64'),
-                          cookie: response.headers._headers['set-cookie'][0].split(';')[0]
-                        }
-                      }).then((result) => {
-                        console.log(result)
-                        res.sendStatus(200);
-                      }).catch(() => {
-                        res.sendStatus(500);
-                      })
+                    }).then((result) => {
+                      console.log(result)
+                      res.sendStatus(200);
                     }).catch(() => {
                       res.sendStatus(500);
                     })
