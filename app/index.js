@@ -5,6 +5,7 @@ const auth = require('./server/auth');
 const path = require('path');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const fetch = require('node-fetch');
 
 dotenv.config();
 
@@ -70,11 +71,57 @@ app.get('/logout', (req, res) => {
 app.post('/submit', (req, res) => {
     if(req.user) {
         if(currentDate.getTime() < deadlineDate.getTime()){
-            User.findOneAndUpdate({ teamName: req.user.teamName }, { $set: { submission: req.body } }, (err, user) => {
+            User.update({ teamName: req.user.teamName }, { $set: { submission: req.body } }, (err, writeResult) => {
                 if(err) {
                     res.sendStatus(500);
                 } else {
-                    res.sendStatus(200);
+                  console.log(writeResult);
+                  if(writeResult.nUpserted === 1){
+                    console.log("upserted")
+                    fetch(process.env.GAVEL_URL + '/api/submit-project', {
+                      body: {
+                        project_name:req.body.projectName,
+                        project_location:req.body.table,
+                        project_description:req.body.description,
+                        team_email:req.body.projectName+"@stupidhack.hackjunction.com"
+                      },
+                      headers: {
+                        'Authorization': 'Basic ' + base64.encode(process.env.GAVEL_USER + ":" + process.env.GAVEL_PASSWORD)
+                      }
+                    }).then((result) => {
+                      User.update({ teamName: req.user.teamName },
+                        { $set: {
+                          judgingLink: result.data.annotator_link,
+                          judgingSecret: result.data.annotator_secret,
+                          gavelId: result.data.project_id
+                        }}, (err, writeResult) => {
+                        if(!err){
+                          res.sendStatus(200);
+                        } else {
+                          res.sendStatus(500);
+                        }
+                      })
+                    }).catch(() => {
+                      res.sendStatus(500);
+                    })
+                  } else {
+                    console.log("modified")
+                    fetch(process.env.GAVEL_URL + '/admin/item_patch', {
+                      body: {
+                        item_id: req.user.gavelId,
+                        location: req.body.table,
+                        name: req.body.projectName,
+                        description:req.body.description
+                      },
+                      headers: {
+                        'Authorization': 'Basic ' + base64.encode(process.env.GAVEL_USER + ":" + process.env.GAVEL_PASSWORD)
+                      }
+                    }).then((result) => {
+                      res.sendStatus(200);
+                    }).catch(() => {
+                      res.sendStatus(500);
+                    })
+                  }
                 }
             })
         }

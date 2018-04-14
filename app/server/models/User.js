@@ -34,6 +34,9 @@ const userSchema = new mongoose.Schema({
     judgingLink: {
         type: String
     },
+    judgingSecret: {
+        type: String
+    },
     gavelId:{
         type: Number
     }
