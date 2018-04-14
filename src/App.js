@@ -52,7 +52,10 @@ class App extends Component {
         </div> :
         <div className="App">
           {this.state && this.state.user ? <div>
-            <SubmissionFormContainer projectName={this.state.submission.projectName} table={this.state.submission.table} description={this.state.submission.description} teamMembers={this.state.submission.teamMembers && this.state.submission.teamMembers.join('\n')} link={this.state.submission.link}/>
+            {this.state.submission ?
+              <SubmissionFormContainer projectName={this.state.submission.projectName} table={this.state.submission.table} description={this.state.submission.description} teamMembers={this.state.submission.teamMembers && this.state.submission.teamMembers.join('\n')} link={this.state.submission.link}/>
+            : <SubmissionFormContainer/>
+            }
           </div> : <div>
             {this.state && this.state.view !== "register" ?
               <LoginForm register={register} update={this.update}/> :
