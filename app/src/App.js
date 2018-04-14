@@ -61,7 +61,8 @@ class SubmissionFormContainer extends Component {
       description: '',
       table: '',
       link: '',
-      isValid: false
+      isValid: false,
+      submitButtonText: 'Submit'
     }
 
     this.isValid = this.isValid.bind(this);
@@ -86,6 +87,27 @@ class SubmissionFormContainer extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    this.setState({ submitButtonText: 'Submitting...' });
+
+    const data = {
+      projectName: this.state.projectName,
+      teamMembers: this.state.teamMembers.split(/\n/),
+      description: this.state.description,
+      table: this.state.table,
+      link: this.state.link
+    };
+
+    fetch('/submit', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(() => this.setState({ submitButtonText: 'Submission succeeded!' }))
+    .catch(() => this.setState({ submitButtonText: 'Submission failed.' }));
   }
 
   render() {

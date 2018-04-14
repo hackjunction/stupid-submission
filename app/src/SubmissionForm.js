@@ -34,7 +34,7 @@ export default function SubmissionForm(props) {
         <input id="projectName" name="projectName" type="text" value={props.projectName} onChange={props.handleChange} />
       </div>
       <div>
-        <label htmlFor="teamMembers">Team members *</label>
+        <label htmlFor="teamMembers">Team members (ONE ON EACH LINE!) *</label>
         <textarea id="teamMembers" name="teamMembers" value={props.teamMembers} onChange={props.handleChange}></textarea>
       </div>
       <div>
@@ -53,7 +53,7 @@ export default function SubmissionForm(props) {
         <input id="link" name="link" type="url" value={props.link} onChange={props.handleChange} />
       </div>
       <div>
-        <button disabled={!props.isValid}>Submit</button>
+        <button disabled={!props.isValid || props.submitButtonText === 'Submitting...'}>{props.submitButtonText}</button>
       </div>
     </form>
   </div>

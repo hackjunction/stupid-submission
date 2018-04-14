@@ -81,6 +81,8 @@ app.post('/submit', (req, res) => {
         else {
             res.sendStatus(500);
         }
+    } else {
+        res.send(403);
     }
 });
 
